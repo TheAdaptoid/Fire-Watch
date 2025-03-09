@@ -1,0 +1,6 @@
+numpy
+pandas
+matplotlib
+noise
+scikit-learn
+ipykernel
