@@ -1,6 +1,14 @@
+# ML
 numpy
-pandas
 matplotlib
-noise
 scikit-learn
+
+# Misc
 ipykernel
+noise
+krpc
+
+# Linting
+pylint
+mypy
+black
