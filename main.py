@@ -7,7 +7,7 @@ from flight_procedures.processing import (
     simple_flight_plan,
     generate_waypoints,
     get_client,
-    execute_flight_plan
+    execute_flight_plan,
 )
 
 CONNECTION: Client = get_client()
@@ -50,7 +50,6 @@ def main() -> None:
     # Execute flight plan
     print("Executing flight plan...")
     execute_flight_plan(client=CONNECTION, flight_plan=flight_plan)
-
 
 
 if __name__ == "__main__":
