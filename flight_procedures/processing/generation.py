@@ -1,8 +1,7 @@
 import numpy as np
 from noise import pnoise2
 
-from flight_procedures.utils import HotSpot
-
+from flight_procedures.utils import HotSpot, timed_function
 
 def map_to_range(
     x: float, new_min: float, new_max: float, old_min: float, old_max: float
@@ -159,7 +158,7 @@ def adjust_axis_ranges(
 
     return adjusted_coordinates
 
-
+@timed_function
 def generate_hot_spots(
     latitude_range: tuple[float, float],
     longitude_range: tuple[float, float],

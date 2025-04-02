@@ -2,6 +2,9 @@
 numpy
 matplotlib
 scikit-learn
+keras
+keras-rl2
+tensorflow
 
 # Misc
 ipykernel

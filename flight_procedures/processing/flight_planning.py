@@ -2,7 +2,8 @@ import numpy as np
 from sklearn.preprocessing import PolynomialFeatures
 from sklearn.linear_model import LinearRegression
 from numpy import array, ndarray
-from flight_procedures.utils import HotZone, FlightPath, FlightPoint
+from flight_procedures.utils import HotZone, FlightPath, FlightPoint, FlightPlan
+from flight_procedures.utils import timed_function
 
 
 def fit_linear_model(
@@ -65,7 +66,7 @@ def calculate_flight_path(hot_zone: HotZone, level_of_detail: int) -> FlightPath
 
     # Create flight path
     flight_points: list[FlightPoint] = [
-        FlightPoint(lattitude=point[0], longitude=point[1], altitude=0)
+        FlightPoint(latitude=point[0], longitude=point[1], altitude=0)
         for point in zip(n_x_coordinates, n_y_coordinates)
     ]
     flight_path: FlightPath = FlightPath(points=flight_points)
@@ -73,6 +74,7 @@ def calculate_flight_path(hot_zone: HotZone, level_of_detail: int) -> FlightPath
     return flight_path
 
 
+@timed_function
 def create_flight_paths(
     hot_zones: list[HotZone], level_of_detail: int = 100
 ) -> list[FlightPath]:
@@ -93,3 +95,21 @@ def create_flight_paths(
     ]
 
     return flight_paths
+
+
+@timed_function
+def simple_flight_plan(flight_paths: list[FlightPath]) -> FlightPlan:
+    """
+    Creates a simple flight plan from a list of flight paths.
+
+    Args:
+        flight_paths (list[FlightPath]): A list of FlightPath objects to be included in the flight plan.
+
+    Returns:
+        FlightPlan: A FlightPlan object containing the generated flight points.
+    """
+    route_set: list[FlightPoint] = []
+    for flight_path in flight_paths:
+        route_set.extend(flight_path.points)
+
+    return FlightPlan(route_set=route_set)

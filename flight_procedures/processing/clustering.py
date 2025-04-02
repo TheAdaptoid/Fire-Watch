@@ -2,7 +2,7 @@ from sklearn.cluster import DBSCAN
 from numpy import array, float64
 from numpy.typing import NDArray
 
-from flight_procedures.utils import HotSpot, HotZone
+from flight_procedures.utils import HotSpot, HotZone, timed_function
 
 EPS: float = 0.015
 MIN_SAMPLES: int = 25
@@ -66,7 +66,7 @@ def extract_hot_zones(
 
     return hot_zones
 
-
+@timed_function
 def identify_hot_zones(
     hot_spots: list[HotSpot], eps: float = EPS, min_samples: int = MIN_SAMPLES
 ) -> list[HotZone]:
