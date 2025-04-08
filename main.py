@@ -11,7 +11,7 @@ from flight_procedures.processing import (
 )
 
 CONNECTION: Client = get_client()
-LEVEL_OF_DETAIL: int = 25
+LEVEL_OF_DETAIL: int = 10
 LATITDUE_RANGE: tuple[float, float] = (-82.5, -72.5)
 LONGITUDE_RANGE: tuple[float, float] = (0, 7.5)
 

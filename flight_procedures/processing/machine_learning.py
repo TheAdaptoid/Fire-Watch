@@ -9,8 +9,8 @@ from torch.nn import functional
 from torch import optim
 
 INPUT_SHAPE: int = 18
-OUTPUT_SHAPE: int = 8
-DEFAULT_DIMENSIONALITY: int = 256
+OUTPUT_SHAPE: int = 9
+DEFAULT_DIMENSIONALITY: int = 2 * INPUT_SHAPE
 MEMORY_SIZE: int = 100_000
 EPSILON_END: float = 0.01
 EPSILON_DECAY: float = 5e-4
@@ -29,7 +29,7 @@ class DeepQNetwork(nn.Module):
 
         self.layer1 = nn.Linear(self.input_shape, DEFAULT_DIMENSIONALITY)
         self.layer2 = nn.Linear(DEFAULT_DIMENSIONALITY, DEFAULT_DIMENSIONALITY)
-        self.layer3 = nn.Linear(DEFAULT_DIMENSIONALITY, DEFAULT_DIMENSIONALITY)
+        # self.layer3 = nn.Linear(DEFAULT_DIMENSIONALITY, DEFAULT_DIMENSIONALITY)
         self.layer4 = nn.Linear(DEFAULT_DIMENSIONALITY, DEFAULT_DIMENSIONALITY)
         self.layer5 = nn.Linear(DEFAULT_DIMENSIONALITY, self.output_shape)
 
@@ -54,7 +54,7 @@ class DeepQNetwork(nn.Module):
 
         state = functional.relu(self.layer1(state))
         state = functional.relu(self.layer2(state))
-        state = functional.relu(self.layer3(state))
+        # state = functional.relu(self.layer3(state))
         state = functional.relu(self.layer4(state))
         action = self.layer5(state)
         return action
