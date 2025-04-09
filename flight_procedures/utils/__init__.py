@@ -1,12 +1,13 @@
-from .classes import (
+from flight_procedures.utils.classes import (
     HotSpot,
     HotZone,
     FlightPath,
     FlightPoint,
     FlightPlan,
     FlightDataPacket,
+    Coordinate
 )
-from .functions import timed_function
+from flight_procedures.utils.functions import timed_function
 
 __all__ = [
     "HotSpot",
@@ -16,4 +17,5 @@ __all__ = [
     "FlightPlan",
     "timed_function",
     "FlightDataPacket",
+    "Coordinate"
 ]

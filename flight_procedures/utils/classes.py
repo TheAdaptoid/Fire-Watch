@@ -1,5 +1,13 @@
 from dataclasses import dataclass
 
+@dataclass
+class Coordinate:
+    """
+    A class representing a coordinate.
+    """
+
+    latitude: float
+    longitude: float
 
 @dataclass
 class HotSpot:
