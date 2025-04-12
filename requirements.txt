@@ -1,17 +1,13 @@
 # ML
 numpy
-matplotlib
-scikit-learn
-keras
-keras-rl2
-tensorflow
+torch
 
-# Misc
-ipykernel
-noise
-krpc
-
-# Linting
+# linting and testing
 pylint
 mypy
 black
+pytest
+pytest-cov
+
+# misc
+krpc
