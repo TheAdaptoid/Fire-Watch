@@ -20,7 +20,7 @@ from flight_manger.utils import Coordinate, create_logger
 # Hyperparameters
 GAMMA: float = 0.99
 EPSILON: float = 1.0
-LEARNING_RATE: float = 0.0005
+LEARNING_RATE: float = 0.001
 OUTPUT_SHAPE: int = 8
 BATCH_SIZE: int = 32
 

@@ -269,7 +269,7 @@ def calculate_reward(client: Client, target: Coordinate) -> tuple[float, bool]:
     if has_crashed(client=client):
         reward_total = reward_total - 100
         is_done = True
-    elif has_arrived(client=client):
+    elif has_arrived(client=client, target=target):
         reward_total = reward_total + 100
         is_done = True
 
