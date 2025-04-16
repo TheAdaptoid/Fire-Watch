@@ -80,21 +80,21 @@ class Agent:
         eps_end: float = EPSILON_END,
         eps_decay: float = EPSILON_DECAY,
     ) -> None:
-        self.gamma = gamma
-        self.epsilon = epsilon
-        self.learning_rate = learning_rate
-        self.input_shape = input_shape
-        self.output_shape = output_shape
-        self.batch_size = batch_size
-        self.memory_size = memory_size
-        self.eps_end = eps_end
-        self.eps_decay = eps_decay
+        self.gamma: float = gamma
+        self.epsilon: float = epsilon
+        self.learning_rate: float = learning_rate
+        self.input_shape: int = input_shape
+        self.output_shape: int = output_shape
+        self.batch_size: int = batch_size
+        self.memory_size: int = memory_size
+        self.eps_end: float = eps_end
+        self.eps_decay: float = eps_decay
 
-        self.action_space = [i for i in range(self.output_shape)]
-        self.memory_counter = 0
+        self.action_space: list[int] = [i for i in range(self.output_shape)]
+        self.memory_counter: int = 0
 
         # Network
-        self.q_eval = DeepQNetwork(
+        self.q_eval: DeepQNetwork = DeepQNetwork(
             learning_rate=self.learning_rate,
             input_shape=self.input_shape,
             output_shape=self.output_shape,

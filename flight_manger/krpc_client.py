@@ -136,6 +136,10 @@ def manipulate_controls(client: Client, action_id: int) -> None:
         case 7:
             control_manager.roll -= DEFAULT_MARGINAL
 
+        # Do nothing
+        case 8:
+            pass
+
         # Invalid action ID
         case _:
             raise ValueError(f"Invalid action ID: {action_id}")
