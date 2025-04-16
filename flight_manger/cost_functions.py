@@ -20,9 +20,9 @@ from flight_manger.utils import (
 IDEAL_ALTITUDE: int = 6000  # (meters) Best for the engines in the simulation
 
 # Weight constants
-W_PITCH: float = 10
+W_PITCH: float = 12.5
 W_ROLL: float = 10
-W_ALTITUDE: float = 12
+W_ALTITUDE: float = 15
 W_HEADING: float = 2
 
 
