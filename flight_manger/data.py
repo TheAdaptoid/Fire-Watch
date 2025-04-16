@@ -12,12 +12,7 @@ from numpy.typing import NDArray
 from torch.types import Tensor
 
 from flight_manger.cost_functions import W_HEADING, heading_reward
-from flight_manger.utils import (
-    Coordinate,
-    create_logger,
-    negative_to_positive,
-    zero_to_one,
-)
+from flight_manger.utils import Coordinate, negative_to_positive, zero_to_one
 
 ALTITUDE_ASL_MIN: float = 0
 ALTITUDE_ASL_MAX: float = 12000  # 40K ft ceiling
@@ -175,9 +170,5 @@ def observe(client: Client, target: Coordinate) -> Observation:
         roll_angle=flight_data.roll,
         heading_offset=heading_reward(client, target) / W_HEADING,
     )
-
-    # logging
-    logger = create_logger()
-    logger.debug(str(observation))
 
     return observation
