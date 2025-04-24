@@ -22,7 +22,7 @@ GAMMA: float = 0.99
 EPSILON: float = 1.0
 LEARNING_RATE: float = 0.001
 OUTPUT_SHAPE: int = 9
-BATCH_SIZE: int = 32
+BATCH_SIZE: int = 128
 
 
 def interact(

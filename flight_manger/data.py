@@ -11,8 +11,7 @@ from krpc.client import Client
 from numpy.typing import NDArray
 from torch.types import Tensor
 
-from flight_manger.cost_functions import W_HEADING, heading_reward
-from flight_manger.utils import Coordinate, negative_to_positive, zero_to_one
+from flight_manger.utils import negative_to_positive, zero_to_one
 
 ALTITUDE_ASL_MIN: float = 0
 ALTITUDE_ASL_MAX: float = 12000  # 40K ft ceiling
@@ -22,6 +21,8 @@ ROLL_ANGLE_MIN: float = -180
 ROLL_ANGLE_MAX: float = 180
 HEADING_DIFFERENCE_MIN: float = -180
 HEADING_DIFFERENCE_MAX: float = 180
+SPEED_MIN: float = 0
+SPEED_MAX: float = 1
 
 
 @dataclass
@@ -31,7 +32,7 @@ class Observation:
     altitude_asl: float
     pitch_angle: float
     roll_angle: float
-    heading_offset: float
+    mach_speed: float
 
     def normalize_values(self) -> None:
         """
@@ -54,7 +55,9 @@ class Observation:
         self.roll_angle = negative_to_positive(
             self.roll_angle, ROLL_ANGLE_MIN, ROLL_ANGLE_MAX
         )
-        self.heading_offset = negative_to_positive(self.heading_offset, -1, 1)
+        self.mach_speed = zero_to_one(
+            self.mach_speed, SPEED_MIN, SPEED_MAX
+        )  # May evaluate to greater than 1
 
     def to_tensor(self, normalize: bool = False) -> Tensor:
         """
@@ -78,7 +81,7 @@ class Observation:
                 self.altitude_asl,
                 self.pitch_angle,
                 self.roll_angle,
-                self.heading_offset,
+                self.mach_speed,
             ],
             dtype=torch.float32,
         )
@@ -105,7 +108,7 @@ class Observation:
                 self.altitude_asl,
                 self.pitch_angle,
                 self.roll_angle,
-                self.heading_offset,
+                self.mach_speed,
             ],
             dtype=np.float32,
         )
@@ -127,7 +130,7 @@ class Observation:
             self.altitude_asl,
             self.pitch_angle,
             self.roll_angle,
-            self.heading_offset,
+            self.mach_speed,
         )
 
     @property
@@ -145,7 +148,7 @@ class Observation:
         return len(self.to_tuple())
 
 
-def observe(client: Client, target: Coordinate) -> Observation:
+def observe(client: Client) -> Observation:
     """
     Observes the current state of the vessel and returns an Observation object.
 
@@ -168,7 +171,7 @@ def observe(client: Client, target: Coordinate) -> Observation:
         altitude_asl=flight_data.mean_altitude,
         pitch_angle=flight_data.pitch,
         roll_angle=flight_data.roll,
-        heading_offset=heading_reward(client, target) / W_HEADING,
+        mach_speed=flight_data.mach,
     )
 
     return observation

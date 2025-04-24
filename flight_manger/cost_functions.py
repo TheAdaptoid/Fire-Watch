@@ -18,12 +18,60 @@ from flight_manger.utils import (
 )
 
 IDEAL_ALTITUDE: int = 6000  # (meters) Best for the engines in the simulation
+IDEAL_SPEED: float = 0.85  # (Mach)
 
 # Weight constants
 W_PITCH: float = 12.5
 W_ROLL: float = 10
 W_ALTITUDE: float = 15
 W_HEADING: float = 2
+W_SPEED: float = 10
+
+
+def __speed_reward(speed: float) -> float:
+    """
+    Computes the reward for the speed of a vessel.
+
+    This function calculates the absolute difference between the current speed
+    and the ideal speed, normalizes this difference to a range [0, 1], and
+    inverses the normalized value to fit the reward structure where an ideal
+    speed results in the highest reward.
+
+    Args:
+        speed (float): The current speed of the vessel in Mach.
+
+    Returns:
+        float: The processed and inversed speed reward, where values closer
+        to the ideal speed yield a higher reward.
+    """
+
+    absolute_difference: float = abs(speed - IDEAL_SPEED)
+    normalized_valued: float = zero_to_one(absolute_difference, 0, IDEAL_SPEED)
+    inversed_valued: float = absolute_negation(normalized_valued)
+    return inversed_valued
+
+
+def speed_reward(client: Client) -> float:
+    """
+    Computes the reward for the speed of a vessel.
+
+    The function calculates the absolute difference between the current speed
+    and the ideal speed, normalizes this difference to a range [0, 1], and
+    inverses the normalized value to fit the reward structure where an ideal
+    speed results in the highest reward.
+
+    Args:
+        client (Client): The kRPC client from which the active vessel is retrieved.
+
+    Returns:
+        float: The processed and inversed speed reward, where values closer
+        to the ideal speed yield a higher reward.
+    """
+
+    flight_data: Flight = client.space_center.active_vessel.flight()
+    raw_speed: float = flight_data.mach
+    reward: float = __speed_reward(raw_speed)
+    return W_SPEED * reward
 
 
 def __pitch_reward(pitch: float) -> float:
@@ -219,25 +267,7 @@ def has_crashed(client: Client) -> bool:
     return situation != VesselSituation.flying
 
 
-def has_arrived(client: Client, target: Coordinate) -> bool:
-    """
-    Determines if the active vessel has reached its target destination.
-
-    This function checks whether the vessel's current position aligns with
-    the target destination, indicating a successful arrival.
-
-    Args:
-        client (Client): The kRPC client used to interact with the game.
-        target (Coordinate): The target coordinate for flight navigation.
-
-    Returns:
-        bool: True if the vessel has arrived at the target destination, False otherwise.
-    """
-    # TODO: implement
-    return False
-
-
-def calculate_reward(client: Client, target: Coordinate) -> tuple[float, bool]:
+def calculate_reward(client: Client) -> tuple[float, bool]:
     """
     Calculates the total reward for the active vessel based on several factors
     and determines if the flight episode is complete.
@@ -256,12 +286,27 @@ def calculate_reward(client: Client, target: Coordinate) -> tuple[float, bool]:
         indicating if the episode is complete. A higher reward indicates better
         adherence to ideal flight parameters.
     """
+    flight_data: Flight = client.space_center.active_vessel.flight()
+    c_pitch: float = flight_data.pitch
+    c_roll: float = flight_data.roll
+    c_altitude: float = flight_data.mean_altitude
+    c_speed: float = flight_data.mach
+
+    # Log flight data
+    logger = create_logger()
+    logger.info(
+        "Pitch: %s | Roll: %s | Altitude: %s | Speed: %s",
+        c_pitch,
+        c_roll,
+        c_altitude,
+        c_speed,
+    )
 
     reward: list[float] = [
-        pitch_reward(client=client),
-        roll_reward(client=client),
-        altitude_reward(client=client),
-        heading_reward(client=client, target=target),
+        __pitch_reward(c_pitch),
+        __roll_reward(c_roll),
+        __altitude_reward(c_altitude),
+        __speed_reward(c_speed),
     ]
     reward_total: float = sum(reward)
 
@@ -269,12 +314,8 @@ def calculate_reward(client: Client, target: Coordinate) -> tuple[float, bool]:
     if has_crashed(client=client):
         reward_total = reward_total - 100
         is_done = True
-    elif has_arrived(client=client, target=target):
-        reward_total = reward_total + 100
-        is_done = True
 
-    # Write logs
-    logger = create_logger()
+    # Log reward
     logger.debug(
         "Done %s | Reward Total: %s | Breakdown: %s", is_done, reward_total, reward
     )

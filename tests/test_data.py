@@ -17,20 +17,20 @@ class TestObservation:
             altitude_asl=ASL,
             pitch_angle=PITCH_ANGLE,
             roll_angle=ROLL_ANGLE,
-            heading_offset=HEADING_DIFFERENCE,
+            mach_speed=HEADING_DIFFERENCE,
         )
 
         assert observation.altitude_asl == ASL
         assert observation.pitch_angle == PITCH_ANGLE
         assert observation.roll_angle == ROLL_ANGLE
-        assert observation.heading_offset == HEADING_DIFFERENCE
+        assert observation.mach_speed == HEADING_DIFFERENCE
 
     def test_normalize_values(self):
         observation = Observation(
             altitude_asl=ASL,
             pitch_angle=PITCH_ANGLE,
             roll_angle=ROLL_ANGLE,
-            heading_offset=HEADING_DIFFERENCE,
+            mach_speed=HEADING_DIFFERENCE,
         )
 
         observation.normalize_values()
@@ -41,15 +41,15 @@ class TestObservation:
         assert observation.pitch_angle <= 1
         assert observation.roll_angle >= -1
         assert observation.roll_angle <= 1
-        assert observation.heading_offset >= -1
-        assert observation.heading_offset <= 1
+        assert observation.mach_speed >= -1
+        assert observation.mach_speed <= 1
 
     def test_to_tensor(self):
         observation = Observation(
             altitude_asl=ASL,
             pitch_angle=PITCH_ANGLE,
             roll_angle=ROLL_ANGLE,
-            heading_offset=HEADING_DIFFERENCE,
+            mach_speed=HEADING_DIFFERENCE,
         )
 
         tensor = observation.to_tensor()
@@ -67,7 +67,7 @@ class TestObservation:
             altitude_asl=ASL,
             pitch_angle=PITCH_ANGLE,
             roll_angle=ROLL_ANGLE,
-            heading_offset=HEADING_DIFFERENCE,
+            mach_speed=HEADING_DIFFERENCE,
         )
 
         ndarray = observation.to_ndarray()
@@ -85,7 +85,7 @@ class TestObservation:
             altitude_asl=ASL,
             pitch_angle=PITCH_ANGLE,
             roll_angle=ROLL_ANGLE,
-            heading_offset=HEADING_DIFFERENCE,
+            mach_speed=HEADING_DIFFERENCE,
         )
 
         tuple_ = observation.to_tuple()
@@ -103,7 +103,7 @@ class TestObservation:
             altitude_asl=ASL,
             pitch_angle=PITCH_ANGLE,
             roll_angle=ROLL_ANGLE,
-            heading_offset=HEADING_DIFFERENCE,
+            mach_speed=HEADING_DIFFERENCE,
         )
 
         assert observation.length == 4
