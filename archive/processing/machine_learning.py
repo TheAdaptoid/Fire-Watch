@@ -8,9 +8,9 @@ from torch import nn
 from torch.nn import functional
 from torch import optim
 
-INPUT_SHAPE: int = 18
-OUTPUT_SHAPE: int = 8
-DEFAULT_DIMENSIONALITY: int = 256
+INPUT_SHAPE: int = 10
+OUTPUT_SHAPE: int = 9
+DEFAULT_DIMENSIONALITY: int = 2 * INPUT_SHAPE
 MEMORY_SIZE: int = 100_000
 EPSILON_END: float = 0.01
 EPSILON_DECAY: float = 5e-4
@@ -35,6 +35,8 @@ class DeepQNetwork(nn.Module):
 
         self.optimizer = optim.Adam(self.parameters(), lr=self.learning_rate)
         self.loss_function = nn.MSELoss()
+        self.activation_function = functional.leaky_relu
+        self.normalizer = nn.BatchNorm1d(self.input_shape)
 
         self.device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
         self.to(self.device)
@@ -51,11 +53,11 @@ class DeepQNetwork(nn.Module):
             torch.Tensor: The output tensor representing the action values for
                 each possible action in the environment.
         """
+        state = self.activation_function(self.layer1(state))
+        state = self.activation_function(self.layer2(state))
+        state = self.activation_function(self.layer3(state))
+        state = self.activation_function(self.layer4(state))
 
-        state = functional.relu(self.layer1(state))
-        state = functional.relu(self.layer2(state))
-        state = functional.relu(self.layer3(state))
-        state = functional.relu(self.layer4(state))
         action = self.layer5(state)
         return action
 
@@ -66,9 +68,9 @@ class Agent:
         gamma: float,
         epsilon: float,
         learning_rate: float,
-        input_shape: int,
-        output_shape: int,
         batch_size: int,
+        input_shape: int = INPUT_SHAPE,
+        output_shape: int = OUTPUT_SHAPE,
         memory_size: int = MEMORY_SIZE,
         eps_end: float = EPSILON_END,
         eps_decay: float = EPSILON_DECAY,

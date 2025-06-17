@@ -1,0 +1,17 @@
+# ML
+numpy
+matplotlib
+scikit-learn
+torch
+
+# Misc
+ipykernel
+noise
+krpc
+
+# Linting and testing
+pytest
+pytest-cov
+pylint
+mypy
+black

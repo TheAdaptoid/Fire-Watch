@@ -1,15 +1,14 @@
 # ML
 numpy
-matplotlib
-scikit-learn
+--extra-index-url [https://download.pytorch.org/whl/cpu](https://download.pytorch.org/whl/cpu)
 torch
 
-# Misc
-ipykernel
-noise
-krpc
-
-# Linting
+# linting and testing
 pylint
 mypy
 black
+pytest
+pytest-cov
+
+# misc
+krpc
